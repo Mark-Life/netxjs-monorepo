@@ -6,19 +6,20 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "bunx --bun ultracite fix",
+    "check": "bunx --bun ultracite check",
+    "fix": "bunx --bun ultracite fix",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "@workspace/eslint-config": "workspace:*",
+    "@biomejs/biome": "2.4.0",
     "@workspace/typescript-config": "workspace:*",
-    "prettier": "^3.8.1",
+    "husky": "^9.1.7",
     "turbo": "^2.8.1",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "ultracite": "7.2.3"
   },
-  "packageManager": "pnpm@10.4.1",
-  "engines": {
-    "node": ">=20"
-  },
+  "packageManager": "bun@latest",
   "workspaces": [
     "apps/*",
     "packages/*"
