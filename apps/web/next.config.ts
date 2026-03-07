@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@workspace/ui", "@workspace/api"],
   reactCompiler: true,
   typedRoutes: true,
+  browserDebugInfoInTerminal: true,
   experimental: {
     // Enable filesystem caching for `next dev`
     turbopackFileSystemCacheForDev: true,
