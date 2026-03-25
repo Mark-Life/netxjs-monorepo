@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import "@workspace/env/web";
 
 const nextConfig: NextConfig = {
   transpilePackages: ["@workspace/ui", "@workspace/api", "@workspace/env"],
