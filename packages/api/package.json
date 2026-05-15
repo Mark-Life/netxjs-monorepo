@@ -10,10 +10,10 @@
   "dependencies": {
     "@orpc/client": "^1.13.5",
     "@orpc/server": "^1.13.5",
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@workspace/typescript-config": "workspace:*",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   }
 }

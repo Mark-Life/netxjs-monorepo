@@ -14,7 +14,7 @@ const findMonorepoRoot = () => {
     }
     dir = resolve(dir, "..");
   }
-  return undefined;
+  return;
 };
 
 const root = findMonorepoRoot();
