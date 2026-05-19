@@ -1,3 +1,9 @@
+---
+title: Basics
+description: "Coding conventions for Effect.fn and Effect.gen"
+order: 3
+---
+
 # Basics
 
 Here are some guidelines for how to structure basic Effect code. How to express sequencing with `Effect.gen`, and when to name effectful functions with `Effect.fn`.
@@ -5,7 +11,7 @@ Here are some guidelines for how to structure basic Effect code. How to express 
 ## Effect.gen
 
 
-Just as `async/await` provides a sequential, readable way to work with `Promise` values (avoiding nested `.then()` chains), `Effect.gen` and `yield*` provide the same ergonomic benefits for `Effect` values.
+Just as `async/await` provides a sequential, readable way to work with `Promise` values (avoiding nested `.then()` chains), `Effect.gen` and `yield*` provide the same ergonomic benefits for `Effect` values. 
 
 
 ```typescript
@@ -44,13 +50,34 @@ const processUser = Effect.fn("processUser")(function* (userId: string) {
 })
 ```
 
+`Effect.fn` also accepts a second argument: a function that transforms the entire effect. This is useful for adding cross-cutting concerns like timeouts without wrapping the body:
+
+```typescript
+import { Effect, flow, Schedule } from "effect"
+// hide-start
+declare const fetchData: (url: string) => Effect.Effect<string>
+declare const processData: (data: string) => Effect.Effect<string>
+// hide-end
+
+const fetchWithTimeout = Effect.fn("fetchWithTimeout")(
+  function* (url: string) {
+    const data = yield* fetchData(url)
+    return yield* processData(data)
+  },
+  flow(
+    Effect.retry(Schedule.recurs(3)),
+    Effect.timeout("5 seconds")
+  )
+)
+```
+
 **Benefits:**
 
 - Call-site tracing for each invocation
 - Stack traces with location details
 - Clean signatures
 
-**Note:** `Effect.fn` automatically creates spans that integrate with telemetry systems. {/* When using OpenTelemetry, these spans appear in your traces. See [Observability](observability) for details. */}
+**Note:** `Effect.fn` automatically creates spans that integrate with telemetry systems. {/* When using OpenTelemetry, these spans appear in your traces. See [Observability](/observability) for details. */}
 
 ## Pipe for Instrumentation
 
@@ -64,7 +91,7 @@ declare const fetchData: Effect.Effect<string>
 
 const program = fetchData.pipe(
   Effect.timeout("5 seconds"),
-  Effect.retry(Schedule.exponential("100 millis").pipe(Schedule.compose(Schedule.recurs(3)))),
+  Effect.retry(Schedule.exponential("100 millis").pipe(Schedule.both(Schedule.recurs(3)))),
   Effect.tap((data) => Effect.logInfo(`Fetched: ${data}`)),
   Effect.withSpan("fetchData")
 )
@@ -89,7 +116,7 @@ declare const callExternalApi: Effect.Effect<string>
 
 // Retry with exponential backoff, max 3 attempts
 const retryPolicy = Schedule.exponential("100 millis").pipe(
-  Schedule.compose(Schedule.recurs(3))
+  Schedule.both(Schedule.recurs(3))
 )
 
 const resilientCall = callExternalApi.pipe(
@@ -107,4 +134,4 @@ const resilientCall = callExternalApi.pipe(
 - `Schedule.exponential` - exponential backoff
 - `Schedule.recurs` - limit number of retries
 - `Schedule.spaced` - fixed delay between retries
-- `Schedule.compose` - combine schedules (both must continue)
+- `Schedule.both` - combine schedules (both must continue)
