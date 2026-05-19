@@ -18,6 +18,10 @@ Source: [effect.solutions](https://www.effect.solutions/)
 
 Load the relevant document based on what you're working on:
 
+- **[01-project-setup.md](core-patterns/01-project-setup.md)** — Effect Language Service install, editor diagnostics, reference repositories for AI assistance. Load when bootstrapping a new Effect project or setting up tooling.
+
+- **[02-tsconfig.md](core-patterns/02-tsconfig.md)** — Recommended TypeScript compiler settings for Effect (target, module, strict flags, incremental builds). Load when configuring `tsconfig.json` for an Effect project.
+
 - **[03-basics.md](core-patterns/03-basics.md)** — Effect.gen, Effect.fn, pipe for instrumentation, retry/timeout with Schedule. Load when writing any Effect code or starting a new effectful function.
 
 - **[04-services-and-layers.md](core-patterns/04-services-and-layers.md)** — Context.Tag services, Layer.effect/Layer.sync implementations, service-driven development, layer composition with provideMerge, layer memoization. Load when creating services, defining dependency injection, or composing layers.
@@ -40,6 +44,9 @@ Load the relevant document based on what you're working on:
 
 ## Local Effect Source
 
-The Effect v3 repository is cloned to `~/.local/share/effect-solutions/effect` for reference.
+The Effect v4 repository is cloned to `~/.local/share/effect-solutions/effect` for reference.
 Use this to explore APIs, find usage examples, and understand implementation
 details when the documentation isn't enough.
+
+If the repository is not present at that path, refer to
+[01-project-setup.md](core-patterns/01-project-setup.md) for clone instructions.
