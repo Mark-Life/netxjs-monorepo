@@ -4,7 +4,8 @@
     "module": "Preserve",
     "moduleResolution": "Bundler",
     "types": ["bun-types"],
-    "noEmit": true
+    "noEmit": true,
+    "strictNullChecks": true
   },
   "include": ["./**/*.ts"]
 }

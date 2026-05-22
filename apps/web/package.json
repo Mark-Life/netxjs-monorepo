@@ -8,8 +8,6 @@
     "dev:app": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "bunx --bun ultracite check",
-    "lint:fix": "bunx --bun ultracite fix",
     "typecheck": "tsc --noEmit"
   },
   "portless": {
