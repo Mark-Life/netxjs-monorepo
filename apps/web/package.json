@@ -4,12 +4,17 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "portless",
+    "dev:app": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "bunx --bun ultracite check",
     "lint:fix": "bunx --bun ultracite fix",
     "typecheck": "tsc --noEmit"
+  },
+  "portless": {
+    "name": "web",
+    "script": "dev:app"
   },
   "dependencies": {
     "@orpc/server": "^1.13.5",

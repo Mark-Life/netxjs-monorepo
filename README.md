@@ -16,6 +16,17 @@ A turborepo-based monorepo template with Next.js, shadcn/ui, and strict code qua
 - **UI**: shadcn/ui + Tailwind CSS
 - **Pre-commit**: Husky + Ultracite
 
+## Editor Setup
+
+Open the repo in VS Code or Cursor and accept the prompt to install the recommended extensions (`.vscode/extensions.json`):
+
+- **Biome** — formatting + linting, set as the default formatter
+- **Tailwind CSS IntelliSense** — autocomplete inside `cn` / `cva` / `tv`
+- **Bun** — run and debug Bun scripts
+- **Pretty TypeScript Errors** / **Error Lens** — readable, inline diagnostics
+
+Format-on-save, import organization, and lint auto-fix run on every save via Biome. An `.editorconfig` keeps other editors consistent, and `F5` debugs the Next.js app (`.vscode/launch.json`).
+
 ## Create a New Project
 
 Using GitHub CLI:
@@ -42,12 +53,14 @@ The `upgrade` command updates Next.js, refreshes all shadcn/ui components, updat
 
 | Command | Description |
 | --- | --- |
-| `bun dev` | Start all apps in dev mode |
+| `bun dev` | Start all apps in dev mode (web → https://web.localhost:8443) |
 | `bun run build` | Build all apps and packages |
 | `bun run lint` | Lint all apps and packages |
 | `bun run fix` | Auto-fix formatting and lint issues |
 | `bun run check` | Check for lint/format issues |
 | `bun run upgrade` | Upgrade Next.js, shadcn/ui, and all deps |
+
+The web app runs behind [portless](https://portless.sh) at `https://web.localhost:8443` — automatic HTTPS, no port juggling. It binds the unprivileged port `8443` (via `PORTLESS_PORT` in the `dev` script) so it never needs `sudo`; the first run still adds a local certificate authority to your trust store once. Prefer a clean `https://web.localhost` with no port? Drop `PORTLESS_PORT` from the script and accept a one-time `sudo` for port 443. To bypass portless entirely, run `bun run dev:app` in `apps/web` for plain `http://localhost:3000`. Change the subdomain via the `portless` key in `apps/web/package.json`.
 
 ## Adding Components
 
