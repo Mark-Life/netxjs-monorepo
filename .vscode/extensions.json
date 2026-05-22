@@ -4,7 +4,8 @@
     "bradlc.vscode-tailwindcss",
     "oven.bun-vscode",
     "yoavbls.pretty-ts-errors",
-    "usernamehw.errorlens"
+    "usernamehw.errorlens",
+    "anteprimorac.html-end-tag-labels"
   ],
   "unwantedRecommendations": [
     "esbenp.prettier-vscode",
