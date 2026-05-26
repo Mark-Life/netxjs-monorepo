@@ -63,3 +63,9 @@ Pick based on project setup:
 ## Packaging
 
 - Separate concerns into packages following monorepo conventions (e.g. `db`, `ai`, etc.)
+
+---
+
+## Beyond this doc
+
+This covers the base stack. For additional tools and libraries beyond the defaults here — special-purpose stuff like media handling, security, and other niche use cases — see the curated directory: <https://andrey-markin.com/directory>
