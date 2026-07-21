@@ -58,9 +58,12 @@ import { CopyIcon, CircleAlertIcon, TrashIcon, ShareIcon, ShoppingBagIcon, MoreH
 
 export function Demo() {
   const [sliderValue, setSliderValue] = React.useState<number[]>([500])
-  const handleSliderValueChange = React.useCallback((value: number[]) => {
-    setSliderValue(value)
-  }, [])
+  const handleSliderValueChange = React.useCallback(
+    (value: number | readonly number[]) => {
+      setSliderValue(Array.isArray(value) ? [...value] : [value as number])
+    },
+    []
+  )
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center bg-muted p-4 sm:p-6 lg:p-12 dark:bg-background">
@@ -250,11 +253,9 @@ export function Demo() {
               </div>
               <div className="flex items-center gap-4">
                 <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="outline">
-                      <span className="hidden md:block">Alert Dialog</span>
-                      <span className="block md:hidden">Dialog</span>
-                    </Button>
+                  <AlertDialogTrigger render={<Button variant="outline" />}>
+                    <span className="hidden md:block">Alert Dialog</span>
+                    <span className="block md:hidden">Dialog</span>
                   </AlertDialogTrigger>
                   <AlertDialogContent size="sm">
                     <AlertDialogHeader>
@@ -275,11 +276,10 @@ export function Demo() {
                 <ButtonGroup>
                   <Button variant="outline">Button Group</Button>
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="icon">
-                        <ChevronUpIcon
-                        />
-                      </Button>
+                    <DropdownMenuTrigger
+                      render={<Button variant="outline" size="icon" />}
+                    >
+                      <ChevronUpIcon />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       align="end"
