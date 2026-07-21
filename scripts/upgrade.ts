@@ -2,68 +2,77 @@ import { $ } from "bun";
 
 const SEPARATOR_WIDTH = 50;
 
+const WORKSPACES = [
+  "apps/web",
+  "packages/api",
+  "packages/env",
+  "packages/ui",
+] as const;
+
+/**
+ * TypeScript 7 is the native port: it ships no JS compiler API, which Next.js
+ * still requires. Keep the whole monorepo on the 6.x line until Next supports it.
+ */
+const TYPESCRIPT_RANGE = "6";
+
+/** Expand a shell command into one step per workspace. */
+const perWorkspace = (
+  label: string,
+  command: (workspace: string) => ReturnType<typeof $>
+) =>
+  WORKSPACES.map((workspace) => ({
+    command: () => command(workspace).cwd(workspace),
+    critical: true,
+    name: `${label}: ${workspace}`,
+  }));
+
 const steps = [
   {
+    command: () =>
+      $`bun add -D --exact @biomejs/biome@latest typescript@${TYPESCRIPT_RANGE} ultracite@latest`,
+    critical: true,
     name: "Bump root dev tooling",
-    command: () =>
-      $`bun add -D --exact @biomejs/biome@latest typescript@latest ultracite@latest`,
-    critical: true,
   },
   {
-    name: "Bump apps/web majors",
-    command: () =>
-      $`bun add -D typescript@latest && bun add lucide-react@latest`.cwd(
-        "apps/web"
-      ),
+    command: () => $`bun update --latest`,
     critical: true,
+    name: "Bump root dependencies",
   },
+  ...perWorkspace("Bump dependencies", () => $`bun update --latest`),
   {
-    name: "Bump packages/api majors",
-    command: () =>
-      $`bun add zod@latest && bun add -D typescript@latest`.cwd("packages/api"),
-    critical: true,
-  },
-  {
-    name: "Bump packages/env majors",
-    command: () =>
-      $`bun add zod@latest dotenv@latest && bun add -D typescript@latest`.cwd(
-        "packages/env"
-      ),
-    critical: true,
-  },
-  {
-    name: "Bump packages/ui majors",
-    command: () =>
-      $`bun add zod@latest lucide-react@latest react-day-picker@latest && bun add -D typescript@latest`.cwd(
-        "packages/ui"
-      ),
-    critical: true,
-  },
-  {
-    name: "Next.js Upgrade",
     command: () => $`bunx @next/codemod@latest upgrade`.cwd("apps/web"),
     critical: true,
+    name: "Next.js Upgrade",
   },
   {
-    name: "shadcn/ui Components",
     command: () =>
       $`bunx shadcn@latest add --all --overwrite`.cwd("packages/ui"),
     critical: true,
+    name: "shadcn/ui Components",
   },
+  ...perWorkspace(
+    "Pin TypeScript",
+    () => $`bun add -D typescript@${TYPESCRIPT_RANGE}`
+  ),
   {
-    name: "Dependency Update",
-    command: () => $`bun update`,
+    command: () => $`bun install`,
     critical: true,
+    name: "Install",
   },
   {
-    name: "Ultracite Fix",
     command: () => $`bun run fix`,
     critical: false,
+    name: "Ultracite Fix",
   },
   {
-    name: "Type Check",
     command: () => $`bun run typecheck`,
     critical: false,
+    name: "Type Check",
+  },
+  {
+    command: () => $`bun run build`,
+    critical: false,
+    name: "Build",
   },
 ] as const;
 
@@ -74,6 +83,7 @@ for (const step of steps) {
   console.log(`>> ${step.name}`);
   console.log("=".repeat(SEPARATOR_WIDTH));
 
+  // biome-ignore lint/performance/noAwaitInLoops: each step mutates the repo and must finish before the next starts
   const result = await step.command().nothrow();
 
   if (result.exitCode === 0) {

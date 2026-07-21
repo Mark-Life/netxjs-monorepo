@@ -8,8 +8,8 @@
     "./client": "./src/client.ts"
   },
   "dependencies": {
-    "@orpc/client": "^1.13.5",
-    "@orpc/server": "^1.13.5",
+    "@orpc/client": "^1.14.8",
+    "@orpc/server": "^1.14.8",
     "zod": "^4.4.3"
   },
   "devDependencies": {
