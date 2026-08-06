@@ -1,10 +1,13 @@
 {
   "name": "@workspace/env",
   "version": "0.0.1",
-  "type": "module",
   "private": true,
+  "type": "module",
   "exports": {
     "./web": "./src/web.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.11",

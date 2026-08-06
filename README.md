@@ -11,6 +11,7 @@ A turborepo-based monorepo template with Next.js, shadcn/ui, and strict code qua
 ## Stack
 
 - **Runtime**: Bun
+- **Language**: TypeScript 7 (the native Go compiler)
 - **Build**: Turborepo
 - **Linting/Formatting**: Ultracite (Biome)
 - **UI**: shadcn/ui + Tailwind CSS
@@ -20,10 +21,17 @@ A turborepo-based monorepo template with Next.js, shadcn/ui, and strict code qua
 
 Open the repo in VS Code or Cursor and accept the prompt to install the recommended extensions (`.vscode/extensions.json`):
 
+- **TypeScript 7** (`TypeScriptTeam.native-preview`) — **required**, see below
 - **Biome** — formatting + linting, set as the default formatter
 - **Tailwind CSS IntelliSense** — autocomplete inside `cn` / `cva` / `tv`
 - **Bun** — run and debug Bun scripts
 - **Pretty TypeScript Errors** / **Error Lens** — readable, inline diagnostics
+
+The TypeScript 7 extension is not optional. TypeScript 7 is a native binary and no longer ships the JavaScript
+compiler API, so VS Code's built-in TypeScript extension cannot run it — without this extension the editor falls
+back to its own bundled compiler and reports diagnostics that disagree with `bun run typecheck`. The extension
+discovers the workspace `typescript` automatically, so no `typescript.tsdk` setting is needed (and setting one
+would break it). It requires VS Code 1.126+.
 
 Format-on-save, import organization, and lint auto-fix run on every save via Biome. An `.editorconfig` keeps other editors consistent, and `F5` debugs the Next.js app (`.vscode/launch.json`).
 
@@ -55,6 +63,7 @@ The `upgrade` command updates Next.js, refreshes all shadcn/ui components, updat
 | --- | --- |
 | `bun dev` | Start all apps in dev mode (web → https://web.localhost:8443) |
 | `bun run build` | Build all apps and packages |
+| `bun run typecheck` | Type-check all apps and packages |
 | `bun run lint` | Lint all apps and packages |
 | `bun run fix` | Auto-fix formatting and lint issues |
 | `bun run check` | Check for lint/format issues |

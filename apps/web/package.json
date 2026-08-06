@@ -1,18 +1,18 @@
 {
   "name": "web",
   "version": "0.0.1",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
+    "build": "next build --turbopack",
     "dev": "portless",
     "dev:app": "next dev --turbopack",
-    "build": "next build --turbopack",
     "start": "next start",
     "typecheck": "tsc --noEmit"
   },
-  "portless": {
-    "name": "web",
-    "script": "dev:app"
+  "overrides": {
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3"
   },
   "dependencies": {
     "@orpc/server": "^1.14.8",
@@ -20,7 +20,7 @@
     "@workspace/env": "workspace:*",
     "@workspace/ui": "workspace:*",
     "lucide-react": "^1.25.0",
-    "next": "16.2.10",
+    "next": "16.3.0",
     "next-themes": "^0.4.6",
     "react": "19.2.7",
     "react-dom": "19.2.7"
@@ -33,8 +33,8 @@
     "@workspace/typescript-config": "workspace:*",
     "babel-plugin-react-compiler": "^1.0.0"
   },
-  "overrides": {
-    "@types/react": "19.2.17",
-    "@types/react-dom": "19.2.3"
+  "portless": {
+    "name": "web",
+    "script": "dev:app"
   }
 }
