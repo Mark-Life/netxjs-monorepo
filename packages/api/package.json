@@ -1,11 +1,14 @@
 {
   "name": "@workspace/api",
   "version": "0.0.1",
-  "type": "module",
   "private": true,
+  "type": "module",
   "exports": {
     "./router": "./src/router.ts",
     "./client": "./src/client.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@orpc/client": "^1.14.8",

@@ -7,13 +7,26 @@ const WORKSPACES = [
   "packages/api",
   "packages/env",
   "packages/ui",
+  "scripts",
 ] as const;
 
 /**
- * TypeScript 7 is the native port: it ships no JS compiler API, which Next.js
- * still requires. Keep the whole monorepo on the 6.x line until Next supports it.
+ * TypeScript 7 is the native port. It ships no JS compiler API, so Next.js shells
+ * out to the project-local `tsc` instead (`experimental.useTypeScriptCli`, on by
+ * default since Next 16.3). Keep Next at >=16.3 for as long as this stays on 7.x.
+ *
+ * Bumping this major is a breaking change, not a version bump: re-read the release
+ * notes for removed compiler options before changing it.
  */
-const TYPESCRIPT_RANGE = "6";
+const TYPESCRIPT_MAJOR = "7";
+
+/**
+ * `bun add --exact` records the spec it was handed, so a bare major would pin the
+ * literal `"7"` and quietly break the exact-pin convention. Resolve it first.
+ */
+const typescriptVersion = (
+  await $`bun info typescript@${TYPESCRIPT_MAJOR} version`.text()
+).trim();
 
 /** Expand a shell command into one step per workspace. */
 const perWorkspace = (
@@ -29,9 +42,9 @@ const perWorkspace = (
 const steps = [
   {
     command: () =>
-      $`bun add -D --exact @biomejs/biome@latest typescript@${TYPESCRIPT_RANGE} ultracite@latest`,
+      $`bun add -D --exact @biomejs/biome@latest typescript@${typescriptVersion} ultracite@latest`,
     critical: true,
-    name: "Bump root dev tooling",
+    name: `Bump root dev tooling (TypeScript ${typescriptVersion})`,
   },
   {
     command: () => $`bun update --latest`,
@@ -50,10 +63,6 @@ const steps = [
     critical: true,
     name: "shadcn/ui Components",
   },
-  ...perWorkspace(
-    "Pin TypeScript",
-    () => $`bun add -D typescript@${TYPESCRIPT_RANGE}`
-  ),
   {
     command: () => $`bun install`,
     critical: true,

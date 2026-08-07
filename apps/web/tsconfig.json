@@ -6,13 +6,7 @@
       "@workspace/ui/*": ["../../packages/ui/src/*"],
       "@workspace/api/*": ["../../packages/api/src/*"],
       "@workspace/env/*": ["../../packages/env/src/*"]
-    },
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "strictNullChecks": true
+    }
   },
   "include": [
     "next-env.d.ts",
