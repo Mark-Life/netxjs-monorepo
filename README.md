@@ -27,11 +27,7 @@ Open the repo in VS Code or Cursor and accept the prompt to install the recommen
 - **Bun** — run and debug Bun scripts
 - **Pretty TypeScript Errors** / **Error Lens** — readable, inline diagnostics
 
-The TypeScript 7 extension is not optional. TypeScript 7 is a native binary and no longer ships the JavaScript
-compiler API, so VS Code's built-in TypeScript extension cannot run it — without this extension the editor falls
-back to its own bundled compiler and reports diagnostics that disagree with `bun run typecheck`. The extension
-discovers the workspace `typescript` automatically, so no `typescript.tsdk` setting is needed (and setting one
-would break it). It requires VS Code 1.126+.
+The TypeScript 7 extension is not optional. TypeScript 7 is a native binary and no longer ships the JavaScript compiler API, so VS Code's built-in TypeScript extension cannot run it — without this extension the editor falls back to its own bundled compiler and reports diagnostics that disagree with `bun run typecheck`. The extension discovers the workspace `typescript` automatically, so no `typescript.tsdk` setting is needed (and setting one would break it). It requires VS Code 1.126+.
 
 Format-on-save, import sorting, and lint auto-fix run on every save via the Oxc extension. An `.editorconfig` keeps other editors consistent, and `F5` debugs the Next.js app (`.vscode/launch.json`).
 
@@ -84,5 +80,5 @@ bunx shadcn@latest add button -c packages/ui
 Then import from `@workspace/ui`:
 
 ```tsx
-import { Button } from "@workspace/ui/components/button"
+import { Button } from "@workspace/ui/components/button";
 ```
