@@ -13,7 +13,7 @@ A turborepo-based monorepo template with Next.js, shadcn/ui, and strict code qua
 - **Runtime**: Bun
 - **Language**: TypeScript 7 (the native Go compiler)
 - **Build**: Turborepo
-- **Linting/Formatting**: Ultracite (Biome)
+- **Linting/Formatting**: Ultracite (Oxlint + Oxfmt)
 - **UI**: shadcn/ui + Tailwind CSS
 - **Pre-commit**: Husky + Ultracite
 
@@ -22,7 +22,7 @@ A turborepo-based monorepo template with Next.js, shadcn/ui, and strict code qua
 Open the repo in VS Code or Cursor and accept the prompt to install the recommended extensions (`.vscode/extensions.json`):
 
 - **TypeScript 7** (`TypeScriptTeam.native-preview`) — **required**, see below
-- **Biome** — formatting + linting, set as the default formatter
+- **Oxc** (`oxc.oxc-vscode`) — Oxlint diagnostics + Oxfmt formatting, set as the default formatter
 - **Tailwind CSS IntelliSense** — autocomplete inside `cn` / `cva` / `tv`
 - **Bun** — run and debug Bun scripts
 - **Pretty TypeScript Errors** / **Error Lens** — readable, inline diagnostics
@@ -33,7 +33,9 @@ back to its own bundled compiler and reports diagnostics that disagree with `bun
 discovers the workspace `typescript` automatically, so no `typescript.tsdk` setting is needed (and setting one
 would break it). It requires VS Code 1.126+.
 
-Format-on-save, import organization, and lint auto-fix run on every save via Biome. An `.editorconfig` keeps other editors consistent, and `F5` debugs the Next.js app (`.vscode/launch.json`).
+Format-on-save, import sorting, and lint auto-fix run on every save via the Oxc extension. An `.editorconfig` keeps other editors consistent, and `F5` debugs the Next.js app (`.vscode/launch.json`).
+
+Lint rules and ignore patterns live in `oxlint.config.ts`; formatter settings live in `oxfmt.config.ts`. Both extend Ultracite's presets and only record where this repo departs from them.
 
 ## Create a New Project
 

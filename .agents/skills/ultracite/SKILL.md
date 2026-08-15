@@ -1,7 +1,7 @@
 ---
 name: lint-and-format
 description: >-
-  Lint and format TypeScript/React code using Ultracite (Biome). Use when writing,
+  Lint and format TypeScript/React code using Ultracite (Oxlint + Oxfmt). Use when writing,
   reviewing, or fixing code to enforce project coding standards including type safety,
   accessibility, performance, and modern JS/TS patterns. Run `bun x ultracite fix`
   to auto-fix issues or `bun x ultracite check` to validate.
@@ -17,7 +17,9 @@ This project uses **Ultracite**, a zero-config preset that enforces strict code 
 - **Check for issues**: `bun x ultracite check`
 - **Diagnose setup**: `bun x ultracite doctor`
 
-Biome (the underlying engine) provides robust linting and formatting. Most issues are automatically fixable.
+Oxlint (the linter) and Oxfmt (the formatter) are the underlying engines. Most issues are automatically fixable.
+
+Local rule and ignore overrides live in `oxlint.config.ts` and `oxfmt.config.ts` at the repo root.
 
 ---
 
@@ -116,11 +118,11 @@ Write code that is **accessible, performant, type-safe, and maintainable**. Focu
 - Don't use `.only` or `.skip` in committed code
 - Keep test suites reasonably flat - avoid excessive `describe` nesting
 
-## When Biome Can't Help
+## When the Linter Can't Help
 
-Biome's linter will catch most issues automatically. Focus your attention on:
+Oxlint will catch most issues automatically. Focus your attention on:
 
-1. **Business logic correctness** - Biome can't validate your algorithms
+1. **Business logic correctness** - a linter can't validate your algorithms
 2. **Meaningful naming** - Use descriptive names for functions, variables, and types
 3. **Architecture decisions** - Component structure, data flow, and API design
 4. **Edge cases** - Handle boundary conditions and error states
@@ -129,6 +131,6 @@ Biome's linter will catch most issues automatically. Focus your attention on:
 
 ---
 
-Most formatting and common issues are automatically fixed by Biome. Run `bun x ultracite fix` before committing to ensure compliance.
+Most formatting and common issues are automatically fixed by Oxfmt and Oxlint. Run `bun x ultracite fix` before committing to ensure compliance.
 
 ---

@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { resolve } from "node:path";
+import path from "node:path";
 import { config } from "dotenv";
 
 /** How many parent directories to walk up before giving up. */
@@ -12,16 +12,16 @@ const MAX_DEPTH = 10;
 const findMonorepoRoot = () => {
   let dir = import.meta.dirname;
   for (let i = 0; i < MAX_DEPTH; i += 1) {
-    if (existsSync(resolve(dir, "turbo.json"))) {
+    if (existsSync(path.resolve(dir, "turbo.json"))) {
       return dir;
     }
-    dir = resolve(dir, "..");
+    dir = path.resolve(dir, "..");
   }
 };
 
 const root = findMonorepoRoot();
 
 if (root) {
-  config({ override: false, path: resolve(root, ".env") });
-  config({ override: false, path: resolve(root, ".env.local") });
+  config({ override: false, path: path.resolve(root, ".env") });
+  config({ override: false, path: path.resolve(root, ".env.local") });
 }

@@ -24,9 +24,9 @@ const TYPESCRIPT_MAJOR = "7";
  * `bun add --exact` records the spec it was handed, so a bare major would pin the
  * literal `"7"` and quietly break the exact-pin convention. Resolve it first.
  */
-const typescriptVersion = (
-  await $`bun info typescript@${TYPESCRIPT_MAJOR} version`.text()
-).trim();
+const typescriptVersionOutput =
+  await $`bun info typescript@${TYPESCRIPT_MAJOR} version`.text();
+const typescriptVersion = typescriptVersionOutput.trim();
 
 /** Expand a shell command into one step per workspace. */
 const perWorkspace = (
@@ -42,7 +42,7 @@ const perWorkspace = (
 const steps = [
   {
     command: () =>
-      $`bun add -D --exact @biomejs/biome@latest typescript@${typescriptVersion} ultracite@latest`,
+      $`bun add -D --exact oxlint@latest oxfmt@latest typescript@${typescriptVersion} ultracite@latest`,
     critical: true,
     name: `Bump root dev tooling (TypeScript ${typescriptVersion})`,
   },
@@ -92,7 +92,7 @@ for (const step of steps) {
   console.log(`>> ${step.name}`);
   console.log("=".repeat(SEPARATOR_WIDTH));
 
-  // biome-ignore lint/performance/noAwaitInLoops: each step mutates the repo and must finish before the next starts
+  // oxlint-disable-next-line no-await-in-loop -- each step mutates the repo and must finish before the next starts
   const result = await step.command().nothrow();
 
   if (result.exitCode === 0) {
