@@ -9,6 +9,7 @@
       "scripts"
     ]
   },
+  "type": "module",
   "scripts": {
     "build": "turbo build",
     "check": "bunx --bun ultracite check",
