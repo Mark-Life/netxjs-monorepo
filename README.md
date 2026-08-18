@@ -33,6 +33,10 @@ Format-on-save, import sorting, and lint auto-fix run on every save via the Oxc 
 
 Lint rules and ignore patterns live in `oxlint.config.ts`; formatter settings live in `oxfmt.config.ts`. Both extend Ultracite's presets and only record where this repo departs from them.
 
+On top of Ultracite, `tools/oxlint/anti-slop/` holds an Oxlint plugin vendored from [dmmulroy/anti-slop](https://github.com/dmmulroy/anti-slop). Its rules reject low-evidence TypeScript: `unknown` in public signatures, chained `as` casts, `typeof` checks on values the compiler already knows, index signatures used as dictionaries. The copy is ours to edit, not a pinned dependency. It is a workspace (`@workspace/anti-slop`) so `bun run typecheck` covers it, and its own `tsconfig.json` sets `allowImportingTsExtensions` — the plugin imports its rules with explicit `.ts` paths, which is what lets Oxlint load them from source. `@oxlint/plugins` must stay on the same exact version as `oxlint`; `bun run upgrade` bumps both together.
+
+The plugin also ships an opt-in Effect rule group at `tools/oxlint/anti-slop/effect/`. It is not registered, because nothing here depends on Effect. To enable it, add `{ name: "anti-slop-effect", specifier: "./tools/oxlint/anti-slop/effect/index.ts" }` to `jsPlugins` and set `"anti-slop-effect/no-service-constructor-imports": "error"`.
+
 ## Create a New Project
 
 Using GitHub CLI:

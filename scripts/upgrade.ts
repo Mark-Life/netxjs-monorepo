@@ -8,6 +8,7 @@ const WORKSPACES = [
   "packages/env",
   "packages/ui",
   "scripts",
+  "tools/oxlint/anti-slop",
 ] as const;
 
 /**
@@ -41,8 +42,12 @@ const perWorkspace = (
 
 const steps = [
   {
+    /**
+     * `@oxlint/plugins` ships in lockstep with `oxlint` and the JS plugin API is
+     * not stable across versions, so the two must move together.
+     */
     command: () =>
-      $`bun add -D --exact oxlint@latest oxfmt@latest typescript@${typescriptVersion} ultracite@latest`,
+      $`bun add -D --exact oxlint@latest @oxlint/plugins@latest oxfmt@latest typescript@${typescriptVersion} ultracite@latest`,
     critical: true,
     name: `Bump root dev tooling (TypeScript ${typescriptVersion})`,
   },

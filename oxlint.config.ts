@@ -13,9 +13,42 @@ const GENERATED_UI = [
   "**/packages/ui/src/lib",
 ];
 
+/**
+ * Skills, hooks and settings installed by coding agents. Vendored assets, not
+ * application source. Mirrored in `oxfmt.config.ts`.
+ */
+const AGENT_TOOLING = [
+  ".agent/**",
+  ".agents/**",
+  ".claude/**",
+  ".codex/**",
+  ".continue/**",
+  ".cursor/**",
+  ".gemini/**",
+  ".opencode/**",
+  ".pi/**",
+  ".roo/**",
+  ".windsurf/**",
+];
+
+/**
+ * The anti-slop rules themselves. Vendored from dmmulroy/anti-slop and ours to
+ * edit, but they follow upstream style, not this repo's. Mirrored in
+ * `oxfmt.config.ts`.
+ */
+const ANTI_SLOP_PLUGIN = "tools/oxlint/anti-slop/**";
+
 export default defineConfig({
   extends: [core, next],
-  ignorePatterns: [...core.ignorePatterns, ...GENERATED_UI],
+  ignorePatterns: [
+    ...core.ignorePatterns,
+    ...GENERATED_UI,
+    ...AGENT_TOOLING,
+    ANTI_SLOP_PLUGIN,
+  ],
+  jsPlugins: [
+    { name: "anti-slop", specifier: "./tools/oxlint/anti-slop/index.ts" },
+  ],
   overrides: [
     {
       files: ["**/*.{test,spec}.{ts,tsx}"],
@@ -25,6 +58,23 @@ export default defineConfig({
     },
   ],
   rules: {
+    // Opinionated rules against low-evidence TypeScript: `unknown` in public
+    // signatures, chained assertions, `typeof` narrowing of known values.
+    "anti-slop/no-chained-type-assertions": "error",
+    "anti-slop/no-conditional-empty-object-spread": "error",
+    "anti-slop/no-known-value-widening": "error",
+    "anti-slop/no-module-mocking": "error",
+    "anti-slop/no-object-parameters": "error",
+    "anti-slop/no-reflect-apply": "error",
+    "anti-slop/no-reflect-get": "error",
+    "anti-slop/no-runtime-typeof": "error",
+    "anti-slop/no-shape-in-symbol-names": "error",
+    "anti-slop/no-unknown-parameters": "error",
+    "anti-slop/no-unknown-returns": "error",
+    "anti-slop/no-unknown-type-aliases": "error",
+    "anti-slop/no-unsafe-dictionary-type": "error",
+    "anti-slop/no-widen-then-assert": "error",
+    "anti-slop/require-safety-comment-for-type-assertion": "error",
     // `import * as X` is the documented shape for several dependencies.
     "import/no-namespace": "off",
     // Logging is the point in scripts and in server-side code.
