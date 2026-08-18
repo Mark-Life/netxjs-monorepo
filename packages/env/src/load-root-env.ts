@@ -9,6 +9,7 @@ const MAX_DEPTH = 10;
 /**
  * Loads .env and .env.local from monorepo root into process.env.
  * Does not override existing env vars (existing values take precedence).
+ * Returns null when no `turbo.json` is found within `MAX_DEPTH` parents.
  */
 const findMonorepoRoot = () => {
   let dir = import.meta.dirname;
@@ -18,11 +19,12 @@ const findMonorepoRoot = () => {
     }
     dir = path.resolve(dir, "..");
   }
+  return null;
 };
 
 const root = findMonorepoRoot();
 
-if (root) {
+if (root !== null) {
   config({ override: false, path: path.resolve(root, ".env") });
   config({ override: false, path: path.resolve(root, ".env.local") });
 }

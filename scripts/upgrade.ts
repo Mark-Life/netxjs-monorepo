@@ -43,11 +43,12 @@ const perWorkspace = (
 const steps = [
   {
     /**
-     * `@oxlint/plugins` ships in lockstep with `oxlint` and the JS plugin API is
-     * not stable across versions, so the two must move together.
+     * `@oxlint/plugins` and `oxlint-tsgolint` ship in lockstep with `oxlint`:
+     * the JS plugin API is not stable across versions, and type-aware linting
+     * runs through the `tsgolint` binary. All three must move together.
      */
     command: () =>
-      $`bun add -D --exact oxlint@latest @oxlint/plugins@latest oxfmt@latest typescript@${typescriptVersion} ultracite@latest`,
+      $`bun add -D --exact oxlint@latest @oxlint/plugins@latest oxlint-tsgolint@latest oxfmt@latest typescript@${typescriptVersion} ultracite@latest`,
     critical: true,
     name: `Bump root dev tooling (TypeScript ${typescriptVersion})`,
   },

@@ -51,6 +51,14 @@ export default defineConfig({
   ],
   overrides: [
     {
+      files: ["scripts/**/*.ts"],
+      rules: {
+        // Bun's `$` returns a chainable ShellPromise. Marking these builders
+        // `async` collapses it to a plain promise and loses `.cwd()`.
+        "typescript/promise-function-async": "off",
+      },
+    },
+    {
       files: ["**/*.{test,spec}.{ts,tsx}"],
       rules: {
         "no-magic-numbers": "off",

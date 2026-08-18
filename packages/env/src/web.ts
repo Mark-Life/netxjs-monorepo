@@ -26,5 +26,5 @@ export const env = createEnv({
    * Skip validation in docker builds or CI where env vars aren't available.
    * Set SKIP_ENV_VALIDATION=1 to bypass.
    */
-  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
+  skipValidation: (process.env.SKIP_ENV_VALIDATION ?? "") !== "",
 });

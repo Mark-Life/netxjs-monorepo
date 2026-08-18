@@ -14,7 +14,7 @@ if [ -z "$STAGED_FILES" ]; then
 fi
 
 # Run formatter
-bun x ultracite fix
+bun run fix
 FORMAT_EXIT_CODE=$?
 
 # Re-stage files that were already staged
