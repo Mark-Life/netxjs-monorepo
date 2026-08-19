@@ -13,7 +13,7 @@ A turborepo-based monorepo template with Next.js, shadcn/ui, and strict code qua
 - **Runtime**: Bun
 - **Language**: TypeScript 7 (the native Go compiler)
 - **Build**: Turborepo
-- **Linting/Formatting**: Ultracite (Biome)
+- **Linting/Formatting**: Ultracite (Oxlint + Oxfmt)
 - **UI**: shadcn/ui + Tailwind CSS
 - **Pre-commit**: Husky + Ultracite
 
@@ -22,18 +22,22 @@ A turborepo-based monorepo template with Next.js, shadcn/ui, and strict code qua
 Open the repo in VS Code or Cursor and accept the prompt to install the recommended extensions (`.vscode/extensions.json`):
 
 - **TypeScript 7** (`TypeScriptTeam.native-preview`) — **required**, see below
-- **Biome** — formatting + linting, set as the default formatter
+- **Oxc** (`oxc.oxc-vscode`) — Oxlint diagnostics + Oxfmt formatting, set as the default formatter
 - **Tailwind CSS IntelliSense** — autocomplete inside `cn` / `cva` / `tv`
 - **Bun** — run and debug Bun scripts
 - **Pretty TypeScript Errors** / **Error Lens** — readable, inline diagnostics
 
-The TypeScript 7 extension is not optional. TypeScript 7 is a native binary and no longer ships the JavaScript
-compiler API, so VS Code's built-in TypeScript extension cannot run it — without this extension the editor falls
-back to its own bundled compiler and reports diagnostics that disagree with `bun run typecheck`. The extension
-discovers the workspace `typescript` automatically, so no `typescript.tsdk` setting is needed (and setting one
-would break it). It requires VS Code 1.126+.
+The TypeScript 7 extension is not optional. TypeScript 7 is a native binary and no longer ships the JavaScript compiler API, so VS Code's built-in TypeScript extension cannot run it — without this extension the editor falls back to its own bundled compiler and reports diagnostics that disagree with `bun run typecheck`. The extension discovers the workspace `typescript` automatically, so no `typescript.tsdk` setting is needed (and setting one would break it). It requires VS Code 1.126+.
 
-Format-on-save, import organization, and lint auto-fix run on every save via Biome. An `.editorconfig` keeps other editors consistent, and `F5` debugs the Next.js app (`.vscode/launch.json`).
+Format-on-save, import sorting, and lint auto-fix run on every save via the Oxc extension. An `.editorconfig` keeps other editors consistent, and `F5` debugs the Next.js app (`.vscode/launch.json`).
+
+Lint rules and ignore patterns live in `oxlint.config.ts`; formatter settings live in `oxfmt.config.ts`. Both extend Ultracite's presets and only record where this repo departs from them.
+
+`bun run check` and `bun run fix` pass `--type-aware`. Oxlint cannot read types on its own: it runs those rules through the `tsgolint` binary from `oxlint-tsgolint`, which carries its own typescript-go build and is independent of the workspace `typescript`. Without it the ~40 type-aware rules in Ultracite's preset — `no-floating-promises`, `no-misused-promises`, `await-thenable`, the `no-unsafe-*` family — load and match nothing. The Oxc extension already asks for type-aware diagnostics, so the editor needs the binary too.
+
+On top of Ultracite, `tools/oxlint/anti-slop/` holds an Oxlint plugin vendored from [dmmulroy/anti-slop](https://github.com/dmmulroy/anti-slop). Its rules reject low-evidence TypeScript: `unknown` in public signatures, chained `as` casts, `typeof` checks on values the compiler already knows, index signatures used as dictionaries. The copy is ours to edit, not a pinned dependency. It is a workspace (`@workspace/anti-slop`) so `bun run typecheck` covers it, and its own `tsconfig.json` sets `allowImportingTsExtensions` — the plugin imports its rules with explicit `.ts` paths, which is what lets Oxlint load them from source. `@oxlint/plugins` must stay on the same exact version as `oxlint`; `bun run upgrade` bumps them together with `oxlint-tsgolint`.
+
+The plugin also ships an opt-in Effect rule group at `tools/oxlint/anti-slop/effect/`. It is not registered, because nothing here depends on Effect. To enable it, add `{ name: "anti-slop-effect", specifier: "./tools/oxlint/anti-slop/effect/index.ts" }` to `jsPlugins` and set `"anti-slop-effect/no-service-constructor-imports": "error"`.
 
 ## Create a New Project
 
@@ -82,5 +86,5 @@ bunx shadcn@latest add button -c packages/ui
 Then import from `@workspace/ui`:
 
 ```tsx
-import { Button } from "@workspace/ui/components/button"
+import { Button } from "@workspace/ui/components/button";
 ```

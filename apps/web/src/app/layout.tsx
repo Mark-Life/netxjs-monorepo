@@ -1,8 +1,9 @@
+import { cn } from "@workspace/ui/lib/utils";
 import { DM_Sans, Geist, Geist_Mono } from "next/font/google";
-import type { ReactNode } from "react";
 
 import "@workspace/ui/globals.css";
-import { cn } from "@workspace/ui/lib/utils";
+import type { ReactNode } from "react";
+
 import { Providers } from "@/components/providers";
 
 const geistHeading = Geist({ subsets: ["latin"], variable: "--font-heading" });

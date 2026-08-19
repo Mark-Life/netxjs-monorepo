@@ -1,5 +1,6 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
+
 import "./load-root-env";
 
 export const env = createEnv({
@@ -25,5 +26,5 @@ export const env = createEnv({
    * Skip validation in docker builds or CI where env vars aren't available.
    * Set SKIP_ENV_VALIDATION=1 to bypass.
    */
-  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
+  skipValidation: (process.env.SKIP_ENV_VALIDATION ?? "") !== "",
 });
