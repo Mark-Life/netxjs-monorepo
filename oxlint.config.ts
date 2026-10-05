@@ -68,20 +68,24 @@ export default defineConfig({
   rules: {
     // Opinionated rules against low-evidence TypeScript: `unknown` in public
     // signatures, chained assertions, `typeof` narrowing of known values.
+    "anti-slop/no-array-filter-map": "error",
     "anti-slop/no-chained-type-assertions": "error",
     "anti-slop/no-conditional-empty-object-spread": "error",
     "anti-slop/no-known-value-widening": "error",
     "anti-slop/no-module-mocking": "error",
     "anti-slop/no-object-parameters": "error",
+    "anti-slop/no-reduce-accumulator-copy": "error",
     "anti-slop/no-reflect-apply": "error",
     "anti-slop/no-reflect-get": "error",
-    "anti-slop/no-runtime-typeof": "error",
+    // Type predicates are the named boundary this rule pushes toward.
+    "anti-slop/no-runtime-typeof": ["error", { allowInTypeGuards: true }],
     "anti-slop/no-shape-in-symbol-names": "error",
     "anti-slop/no-unknown-parameters": "error",
     "anti-slop/no-unknown-returns": "error",
     "anti-slop/no-unknown-type-aliases": "error",
     "anti-slop/no-unsafe-dictionary-type": "error",
     "anti-slop/no-widen-then-assert": "error",
+    "anti-slop/require-readable-spacing": "error",
     "anti-slop/require-safety-comment-for-type-assertion": "error",
     // `import * as X` is the documented shape for several dependencies.
     "import/no-namespace": "off",
@@ -93,6 +97,14 @@ export default defineConfig({
     "no-magic-numbers": ["warn", { ignore: [-1, 0, 1] }],
     // Each workspace package exposes its public surface through a barrel.
     "oxc/no-barrel-file": "off",
+    // Core rules that fight anti-slop, turned off as in `ultracite/oxlint/anti-slop`.
+    // The autofix rewrites index signatures into `Record`, which
+    // no-known-value-widening flags again: a fix/break loop.
+    "typescript/consistent-indexed-object-style": "off",
     "typescript/consistent-type-definitions": ["error", "interface"],
+    // Bans the empty-accumulator pattern that no-known-value-widening steers to.
+    "unicorn/no-immediate-mutation": "off",
+    // Steers toward `Reflect.apply`, which no-reflect-apply rejects.
+    "unicorn/prefer-reflect-apply": "off",
   },
 });

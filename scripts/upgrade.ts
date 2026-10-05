@@ -27,6 +27,7 @@ const TYPESCRIPT_MAJOR = "7";
  */
 const typescriptVersionOutput =
   await $`bun info typescript@${TYPESCRIPT_MAJOR} version`.text();
+
 const typescriptVersion = typescriptVersionOutput.trim();
 
 /** Expand a shell command into one step per workspace. */
@@ -53,6 +54,16 @@ const steps = [
     name: `Bump root dev tooling (TypeScript ${typescriptVersion})`,
   },
   {
+    /**
+     * Runs before the dependency bumps: `shadcn add` pins the versions its
+     * registry was built against (e.g. `recharts`), which can be older than latest.
+     */
+    command: () =>
+      $`bunx shadcn@latest add --all --overwrite`.cwd("packages/ui"),
+    critical: true,
+    name: "shadcn/ui Components",
+  },
+  {
     command: () => $`bun update --latest`,
     critical: true,
     name: "Bump root dependencies",
@@ -62,12 +73,6 @@ const steps = [
     command: () => $`bunx @next/codemod@latest upgrade`.cwd("apps/web"),
     critical: true,
     name: "Next.js Upgrade",
-  },
-  {
-    command: () =>
-      $`bunx shadcn@latest add --all --overwrite`.cwd("packages/ui"),
-    critical: true,
-    name: "shadcn/ui Components",
   },
   {
     command: () => $`bun install`,

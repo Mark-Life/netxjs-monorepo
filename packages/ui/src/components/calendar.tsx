@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { cn } from "cn"
 import {
   DayPicker,
   getDefaultClassNames,
@@ -8,7 +9,6 @@ import {
   type Locale,
 } from "react-day-picker"
 
-import { cn } from "@workspace/ui/lib/utils"
 import { Button, buttonVariants } from "@workspace/ui/components/button"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowLeftIcon, ArrowRightIcon, ArrowDownIcon } from "@hugeicons/core-free-icons"

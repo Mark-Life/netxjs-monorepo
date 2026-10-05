@@ -9,5 +9,6 @@ export const createClient = (baseUrl: string): RouterClient<Router> => {
   const link = new RPCLink({
     url: `${baseUrl}/rpc`,
   });
+
   return createORPCClient(link);
 };

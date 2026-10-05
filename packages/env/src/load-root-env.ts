@@ -13,12 +13,15 @@ const MAX_DEPTH = 10;
  */
 const findMonorepoRoot = () => {
   let dir = import.meta.dirname;
+
   for (let i = 0; i < MAX_DEPTH; i += 1) {
     if (existsSync(path.resolve(dir, "turbo.json"))) {
       return dir;
     }
+
     dir = path.resolve(dir, "..");
   }
+
   return null;
 };
 
