@@ -8,8 +8,10 @@ const handleRequest = async (request: Request) => {
     context: { headers: request.headers },
     prefix: "/rpc",
   });
+
   return response ?? new Response("Not found", { status: 404 });
 };
 
 export const GET = handleRequest;
+
 export const POST = handleRequest;

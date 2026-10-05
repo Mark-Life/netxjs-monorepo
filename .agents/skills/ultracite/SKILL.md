@@ -1,136 +1,125 @@
 ---
-name: lint-and-format
-description: >-
-  Lint and format TypeScript/React code using Ultracite (Oxlint + Oxfmt). Use when writing,
-  reviewing, or fixing code to enforce project coding standards including type safety,
-  accessibility, performance, and modern JS/TS patterns. Run `bun x ultracite fix`
-  to auto-fix issues or `bun x ultracite check` to validate.
+name: ultracite
+description: "Ultracite is a zero-config linting and formatting preset for JavaScript/TypeScript projects. Use when: (1) Setting up or initializing Ultracite in a project (ultracite init), (2) Running linting or formatting commands (check, fix, doctor), (3) Writing or reviewing JS/TS code in a project that uses Ultracite — to follow its code standards, (4) Troubleshooting linting/formatting issues, (5) User mentions 'ultracite', 'lint', 'format', 'code quality', or 'biome/eslint/oxlint' in a project with Ultracite installed."
 ---
 
-# Ultracite Code Standards
+# Ultracite
 
-This project uses **Ultracite**, a zero-config preset that enforces strict code quality standards through automated formatting and linting.
+Zero-config linting and formatting for JS/TS projects. Supports three linter backends: **Oxlint** + Oxfmt (recommended), **Biome**, and **ESLint** + Prettier + Stylelint.
 
-## Quick Reference
+## Detecting Ultracite
 
-- **Format code**: `bun x ultracite fix`
-- **Check for issues**: `bun x ultracite check`
-- **Diagnose setup**: `bun x ultracite doctor`
+Check if `ultracite` is in `package.json` dependencies or devDependencies. Detect the active linter by looking for (searching upward from the current directory):
 
-Oxlint (the linter) and Oxfmt (the formatter) are the underlying engines. Most issues are automatically fixable.
+- `biome.json` / `biome.jsonc` → Biome
+- `eslint.config.*` (`.mjs`, `.js`, `.cjs`, `.ts`, `.mts`, `.cts`) → ESLint (with Prettier for formatting)
+- `oxlint.config.ts` → Oxlint (with `oxfmt.config.ts` for formatting)
 
-Local rule and ignore overrides live in `oxlint.config.ts` and `oxfmt.config.ts` at the repo root.
+## CLI Commands
 
----
+```bash
+# Check for issues (read-only)
+bunx ultracite check
 
-## Core Principles
+# Auto-fix issues
+bunx ultracite fix
 
-Write code that is **accessible, performant, type-safe, and maintainable**. Focus on clarity and explicit intent over brevity.
+# Diagnose setup problems
+bunx ultracite doctor
 
-### Type Safety & Explicitness
+# Initialize in a new project
+bunx ultracite init
+```
 
-- Use explicit types for function parameters and return values when they enhance clarity
-- Prefer `unknown` over `any` when the type is genuinely unknown
-- Use const assertions (`as const`) for immutable values and literal types
-- Leverage TypeScript's type narrowing instead of type assertions
-- Use meaningful variable names instead of magic numbers - extract constants with descriptive names
+Replace `bunx` with `npx`, `pnpm exec`, or `yarn` depending on the package manager, so the project's installed Ultracite runs (`pnpm dlx` and `yarn dlx` download the latest release instead, and Yarn 1 has no `dlx`). Only `init` in a project without Ultracite needs a download runner such as `pnpm dlx`.
 
-### Modern JavaScript/TypeScript
+`check` and `fix` accept optional file paths: `bunx ultracite check src/index.ts`. Unknown options are passed through to the underlying linter (e.g. `bunx ultracite check --max-warnings 0`).
 
-- Use arrow functions for callbacks and short functions
-- Prefer `for...of` loops over `.forEach()` and indexed `for` loops
-- Use optional chaining (`?.`) and nullish coalescing (`??`) for safer property access
-- Prefer template literals over string concatenation
-- Use destructuring for object and array assignments
-- Use `const` by default, `let` only when reassignment is needed, never `var`
+## Initialization
 
-### Async & Promises
+`bunx ultracite init` runs an interactive setup. For non-interactive (CI) use, pass flags:
 
-- Always `await` promises in async functions - don't forget to use the return value
-- Use `async/await` syntax instead of promise chains for better readability
-- Handle errors appropriately in async code with try-catch blocks
-- Don't use async functions as Promise executors
+```bash
+bunx ultracite init \
+  --pm bun \
+  --linter biome \
+  --editors universal \
+  --agents claude copilot \
+  --frameworks react next \
+  --integrations husky lint-staged \
+  --quiet
+```
 
-### React & JSX
+**Flags:**
 
-- Use function components over class components
-- Call hooks at the top level only, never conditionally
-- Specify all dependencies in hook dependency arrays correctly
-- Use the `key` prop for elements in iterables (prefer unique IDs over array indices)
-- Nest children between opening and closing tags instead of passing as props
-- Don't define components inside other components
-- Use semantic HTML and ARIA attributes for accessibility:
-  - Provide meaningful alt text for images
-  - Use proper heading hierarchy
-  - Add labels for form inputs
-  - Include keyboard event handlers alongside mouse events
-  - Use semantic elements (`<button>`, `<nav>`, etc.) instead of divs with roles
+- `--pm` — `npm` | `yarn` | `pnpm` | `bun` | `deno` | `nub` | `aube`
+- `--linter` — `oxlint` (recommended) | `biome` | `eslint`
+- `--editors` — `universal` (writes `.vscode/settings.json` for every VS Code-based editor) | `vscode` | `cursor` | `windsurf` | `codebuddy` | `antigravity` | `bob` | `kiro` | `trae` | `void` | `zed`
+- `--agents` — `universal` (writes `AGENTS.md`) | `claude` | `codex` | `copilot` | `cline` | `amp` | `gemini` | `cursor-cli` + 34 more (41 agents supported)
+- `--frameworks` — `react` | `next` | `solid` | `vue` | `svelte` | `qwik` | `remix` | `tanstack` | `angular` | `astro` | `nestjs` | `jest` | `vitest`
+- `--integrations` — `husky` | `lefthook` | `lint-staged` | `pre-commit`
+- `--hooks` — Enable auto-fix hooks: `claude` | `copilot` | `cursor` | `windsurf` | `codebuddy`
+- `--js-plugins` — Opt-in Oxlint JS plugins: `@shadcn/lint` | `anti-slop` | `eslint-plugin-github` | `eslint-plugin-sonarjs` | `oxlint-plugin-react-doctor`
+- `--type-aware` — Enable type-aware linting (Biome: extends the `type-aware` preset; Oxlint: installs `oxlint-tsgolint`)
+- `--install-skill` — Install the reusable Ultracite skill after setup
+- `--skip-install` — Skip dependency installation
+- `--quiet` — Suppress prompts (auto-detected when `CI=true`); defaults to `oxlint` when `--linter` is omitted
 
-### Error Handling & Debugging
+Init creates config that extends Ultracite presets:
 
-- Remove `console.log`, `debugger`, and `alert` statements from production code
-- Throw `Error` objects with descriptive messages, not strings or other values
-- Use `try-catch` blocks meaningfully - don't catch errors just to rethrow them
-- Prefer early returns over nested conditionals for error cases
+```jsonc
+// biome.jsonc
+{ "extends": ["ultracite/biome/core", "ultracite/biome/react"] }
+```
 
-### Code Organization
+```ts
+// eslint.config.mjs — arrays of flat configs, spread together
+import core from "ultracite/eslint/core";
+import react from "ultracite/eslint/react";
+export default [...core, ...react];
+```
 
-- Keep functions focused and under reasonable cognitive complexity limits
-- Extract complex conditions into well-named boolean variables
-- Use early returns to reduce nesting
-- Prefer simple conditionals over nested ternary operators
-- Group related code together and separate concerns
+```ts
+// oxlint.config.ts — imports passed to extends
+import { defineConfig } from "oxlint";
+import core from "ultracite/oxlint/core";
+export default defineConfig({
+  extends: [core],
+  ignorePatterns: core.ignorePatterns,
+});
+```
 
-### Security
+Presets available per linter (`ultracite/<linter>/<preset>`): `core`, `react`, `next`, `solid`, `vue`, `svelte`, `qwik`, `remix`, `tanstack`, `angular`, `astro`, `nestjs`, `jest`, `vitest`. Biome also has `type-aware`. Oxlint also has `js-plugins` (`eslint-plugin-github`, `eslint-plugin-sonarjs` and `oxlint-plugin-react-doctor` run through oxlint's JS plugin support, with `next/js-plugins` and `tanstack/js-plugins` adding framework-specific React Doctor rules), `anti-slop` and `shadcn`. These are opt-in: init only adds them when picked in its prompt or passed with `--js-plugins`.
 
-- Add `rel="noopener"` when using `target="_blank"` on links
-- Avoid `dangerouslySetInnerHTML` unless absolutely necessary
-- Don't use `eval()` or assign directly to `document.cookie`
-- Validate and sanitize user input
+## Code Standards
 
-### Performance
+When writing code in a project with Ultracite, follow these standards. For the full rules reference, see [references/code-standards.md](references/code-standards.md).
 
-- Avoid spread syntax in accumulators within loops
-- Use top-level regex literals instead of creating them in loops
-- Prefer specific imports over namespace imports
-- Avoid barrel files (index files that re-export everything)
-- Use proper image components (e.g., Next.js `<Image>`) over `<img>` tags
+Key rules at a glance:
 
-### Framework-Specific Guidance
+Formatting is handled by the project's configured linter/formatter. Respect the repository's existing formatter settings instead of forcing one fixed line width, quote style, or trailing comma policy.
 
-**Next.js:**
-- Use Next.js `<Image>` component for images
-- Use `next/head` or App Router metadata API for head elements
-- Use Server Components for async data fetching instead of async Client Components
+**Type safety:** Use explicit types when they improve clarity. Prefer `unknown` over `any`. Use `as const` for immutable values and rely on type narrowing over blunt assertions.
 
-**React 19+:**
-- Use ref as a prop instead of `React.forwardRef`
+**Modern JavaScript/TypeScript:** Prefer `const`, destructuring, optional chaining, nullish coalescing, template literals, `for...of`, and concise arrow functions.
 
-**Solid/Svelte/Vue/Qwik:**
-- Use `class` and `for` attributes (not `className` or `htmlFor`)
+**Async and correctness:** Always `await` promises in async functions. Prefer `async/await` over promise chains. Remove `console.log`, `debugger`, and `alert` from production code.
 
----
+**React and accessibility:** Use function components, keep hooks top-level with correct deps, avoid nested component definitions, and use semantic HTML with the right labels, headings, alt text, and keyboard affordances.
 
-## Testing
+**Organization, security, performance, and testing:** Keep functions focused, prefer early returns, avoid `dangerouslySetInnerHTML` and `eval()`, prefer specific imports and top-level regex, and keep tests free of `.only` and `.skip`.
 
-- Write assertions inside `it()` or `test()` blocks
-- Avoid done callbacks in async tests - use async/await instead
-- Don't use `.only` or `.skip` in committed code
-- Keep test suites reasonably flat - avoid excessive `describe` nesting
+## Troubleshooting
 
-## When the Linter Can't Help
+Run `bunx ultracite doctor` to diagnose. It checks:
 
-Oxlint will catch most issues automatically. Focus your attention on:
+1. Linter and formatter installation (Biome; or ESLint + Prettier + Stylelint; or Oxlint + oxfmt)
+2. Config validity (extends the ultracite presets correctly)
+3. Ultracite in package.json dependencies
+4. Conflicting tools (legacy `.eslintrc.*` files; `.prettierrc.*`/`prettier.config.*` when not using the ESLint backend)
 
-1. **Business logic correctness** - a linter can't validate your algorithms
-2. **Meaningful naming** - Use descriptive names for functions, variables, and types
-3. **Architecture decisions** - Component structure, data flow, and API design
-4. **Edge cases** - Handle boundary conditions and error states
-5. **User experience** - Accessibility, performance, and usability considerations
-6. **Documentation** - Add comments for complex logic, but prefer self-documenting code
+Common fixes:
 
----
-
-Most formatting and common issues are automatically fixed by Oxfmt and Oxlint. Run `bun x ultracite fix` before committing to ensure compliance.
-
----
+- **Conflicting configs**: Delete legacy `.eslintrc.*` and `.prettierrc.*` files after migrating to Ultracite
+- **Missing dependency**: Run `bunx ultracite init` again or manually add `ultracite` to devDependencies
+- **Rules not applying**: Ensure config file extends the correct presets for your framework

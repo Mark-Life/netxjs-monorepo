@@ -11,9 +11,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@orpc/client": "^1.14.8",
-    "@orpc/server": "^1.14.8",
-    "zod": "^4.4.3"
+    "@orpc/client": "^1.15.4",
+    "@orpc/server": "^1.15.4",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@workspace/typescript-config": "workspace:*"
