@@ -64,6 +64,15 @@ const steps = [
     name: "shadcn/ui Components",
   },
   {
+    /**
+     * The registry's `spinner.tsx` passes SVG props to `HugeiconsIcon` and fails
+     * `tsc` on `strokeWidth`. Keep the committed version with the correct props.
+     */
+    command: () => $`git restore packages/ui/src/components/spinner.tsx`,
+    critical: true,
+    name: "Restore spinner.tsx",
+  },
+  {
     command: () => $`bun update --latest`,
     critical: true,
     name: "Bump root dependencies",

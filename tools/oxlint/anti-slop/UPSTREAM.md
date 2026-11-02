@@ -1,10 +1,10 @@
 # Upstream provenance
 
 - Source: https://github.com/dmmulroy/anti-slop
-- Synced revision: `c44ef22ca116d0ba62a3ff663a0bd13a3f3fa40b` (2026-09, merge of PR #36)
+- Synced revision: `13909c9e07590f5a85d93c62712259fe14a883f7` (2026-11, merge of PR #45)
 - Copied path: `skills/install-anti-slop/assets/anti-slop/` (the bundled plugin, no tests)
 - Original vendoring base: `6d53855` (bytes matched except the local edit below)
-- Last sync: 2026-10-05, three-way merge of base, local and incoming
+- Last sync: 2026-11-02, no local edits in the changed files, so taken as-is
 
 ## Local changes
 
