@@ -8,7 +8,7 @@
     "dev": "portless",
     "dev:app": "next dev --turbopack",
     "start": "next start",
-    "typecheck": "bun check"
+    "typecheck": "tsrs --noEmit --fast"
   },
   "dependencies": {
     "@orpc/server": "^1.16.1",

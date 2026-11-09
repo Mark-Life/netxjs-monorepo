@@ -7,7 +7,7 @@
     "./web": "./src/web.ts"
   },
   "scripts": {
-    "typecheck": "bun check"
+    "typecheck": "tsrs --noEmit --fast"
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.11",

@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   transpilePackages: ["@workspace/ui", "@workspace/api", "@workspace/env"],
   typedRoutes: true,
+  typescript: {
+    // `bun run typecheck` (tsrs) is the single type checker; skip Next's own pass.
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;
