@@ -29,7 +29,7 @@ Open the repo in VS Code or Cursor and accept the prompt to install the recommen
 
 The TypeScript 7 extension is not optional. TypeScript 7 is a native binary and no longer ships the JavaScript compiler API, so VS Code's built-in TypeScript extension cannot run it — without this extension the editor falls back to its own bundled compiler and reports diagnostics that disagree with `bun run typecheck`. The extension discovers the workspace `typescript` automatically, so no `typescript.tsdk` setting is needed (and setting one would break it). It requires VS Code 1.126+.
 
-`bun run typecheck` runs [`tsrs`](https://github.com/oxc-project/tsrs) (Oxc's Rust port of the TypeScript 7 type checker) in each workspace as `tsrs --noEmit --fast`. It reads the same `tsconfig.json` files and is experimental, so if a diagnostic looks wrong, compare it against `bunx tsc --noEmit` (the `typescript` package stays for the editor).
+`bun run typecheck` runs [`tsrs`](https://github.com/oxc-project/tsrs) (Oxc's Rust port of the TypeScript 7 type checker) in each workspace as `tsrs --noEmit --fast`. It reads the same `tsconfig.json` files and is experimental, so if a diagnostic looks wrong, compare it against `bunx tsc --noEmit` (the `typescript` package stays for the editor). `next build` skips its own type check (`typescript.ignoreBuildErrors` in `apps/web/next.config.ts`), so `bun run typecheck` is the only gate and must run in CI.
 
 Format-on-save, import sorting, and lint auto-fix run on every save via the Oxc extension. An `.editorconfig` keeps other editors consistent, and `F5` debugs the Next.js app (`.vscode/launch.json`).
 
