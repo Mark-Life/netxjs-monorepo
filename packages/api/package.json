@@ -8,7 +8,7 @@
     "./client": "./src/client.ts"
   },
   "scripts": {
-    "typecheck": "bun check"
+    "typecheck": "tsrs --noEmit --fast"
   },
   "dependencies": {
     "@orpc/client": "^1.16.1",
